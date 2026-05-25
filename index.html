@@ -20,37 +20,23 @@ body{font-family:'Sarabun',sans-serif;background:#F0F2F5;color:#1a1a1a;font-size
   --gray:#757575;--border:#E0E0E0;--bg:#F0F2F5;
   --white:#FFFFFF;--text:#1a1a1a;--muted:#616161
 }
-
-/* Layout */
 #app{width:100%;max-width:430px;margin:0 auto;min-height:100vh;position:relative;background:#F0F2F5}
 .page{display:none;flex-direction:column;min-height:100vh;padding-bottom:68px;background:#F0F2F5}
 .page.on{display:flex}
-
-/* Topbar */
 .bar{background:var(--blue);color:#fff;height:52px;display:flex;align-items:center;padding:0 8px 0 4px;position:sticky;top:0;z-index:50}
 .bar-back{background:none;border:none;color:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px}
 .bar-back svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 .bar-title{flex:1;font-size:17px;font-weight:600;padding-left:4px}
 .bar-btn{background:none;border:none;color:#fff;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px}
 .bar-btn svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-
-/* Bottom nav */
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid var(--border);display:flex;z-index:50;height:58px}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--gray);background:none;border:none;font-family:'Sarabun',sans-serif;font-size:10px;padding:6px 0}
 .nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nav-item.on{color:var(--blue)}
-
-/* Body content */
 .body{padding:14px;flex:1}
-
-/* Card */
 .card{background:#fff;border-radius:10px;margin-bottom:12px;overflow:hidden;border:1px solid var(--border)}
 .card-p{padding:14px}
-
-/* Section label */
 .sec{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
-
-/* Badge */
 .tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
 .tag-new{background:var(--blue-light);color:var(--blue)}
 .tag-ok{background:var(--green-light);color:var(--green)}
@@ -58,14 +44,10 @@ body{font-family:'Sarabun',sans-serif;background:#F0F2F5;color:#1a1a1a;font-size
 .tag-acc{background:var(--orange-light);color:var(--orange)}
 .tag-wip{background:var(--purple-light);color:var(--purple)}
 .tag-done{background:var(--teal-light);color:var(--teal)}
-
-/* Urgency */
 .u1{color:var(--red);font-weight:600}
 .u2{color:var(--orange);font-weight:600}
 .u3{color:#F9A825;font-weight:500}
 .u4{color:var(--green)}
-
-/* Form */
 .fg{margin-bottom:13px}
 .fl{display:block;font-size:13px;font-weight:500;color:#424242;margin-bottom:5px}
 .req{color:var(--red);margin-left:2px}
@@ -74,8 +56,6 @@ body{font-family:'Sarabun',sans-serif;background:#F0F2F5;color:#1a1a1a;font-size
 textarea.fc{resize:none;min-height:80px;line-height:1.5}
 select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23666' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:36px}
 .fc[readonly]{background:#F5F5F5;color:var(--muted)}
-
-/* Buttons */
 .btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;border-radius:8px;font-size:15px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;border:none;transition:opacity .15s}
 .btn:active{opacity:.8}
 .btn:disabled{opacity:.45;pointer-events:none}
@@ -88,8 +68,6 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
 .btn-gray{background:#EEEEEE;color:#424242}
 .btn-row{display:flex;gap:10px}
 .btn-row .btn{flex:1}
-
-/* Stats grid */
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .scard{background:#fff;border-radius:10px;padding:12px 8px;text-align:center;border:1px solid var(--border);cursor:pointer}
 .scard:active{opacity:.7}
@@ -101,90 +79,61 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
 .scard.s3 .snum{color:var(--orange)}
 .scard.s4 .snum{color:var(--purple)}
 .scard.s5 .snum{color:var(--teal)}
-
-/* Menu grid */
 .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .mitem{background:#fff;border-radius:10px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;border:1px solid var(--border);font-family:'Sarabun',sans-serif}
 .mitem:active{background:#F5F5F5}
 .mitem svg{width:28px;height:28px;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}
 .mitem span{font-size:11px;color:#424242;text-align:center}
-
-/* Request list item */
 .ri{background:#fff;border-radius:10px;padding:14px;margin-bottom:9px;border:1px solid var(--border);border-left-width:4px;cursor:pointer}
 .ri:active{background:#FAFAFA}
 .ri-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .ri-id{font-size:13px;font-weight:600;color:var(--blue)}
 .ri-title{font-size:15px;font-weight:500;margin-bottom:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .ri-meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
-
-/* Detail rows */
 .dr{display:flex;padding:9px 0;border-bottom:1px solid #F5F5F5}
 .dr:last-child{border:none}
 .dk{width:120px;font-size:13px;color:var(--muted);flex-shrink:0}
 .dv{font-size:14px;flex:1;word-break:break-word}
-
-/* Cost */
 .crow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F5F5F5;font-size:14px}
 .crow.tot{font-weight:700;font-size:16px;border:none;border-top:2px solid #E0E0E0;padding-top:10px;margin-top:4px}
-
-/* Search */
 .srch{display:flex;align-items:center;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;gap:8px;margin-bottom:12px}
 .srch svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;stroke-linecap:round;stroke-linejoin:round}
 .srch input{flex:1;border:none;outline:none;font-size:14px;font-family:'Sarabun',sans-serif;color:var(--text);background:none}
-
-/* Tabs */
 .tabs{display:flex;background:#fff;border-radius:8px;padding:3px;margin-bottom:12px;border:1px solid var(--border);gap:2px}
 .tab{flex:1;text-align:center;padding:7px 4px;border-radius:6px;font-size:12px;cursor:pointer;color:var(--muted);font-family:'Sarabun',sans-serif;border:none;background:none;font-weight:500}
 .tab.on{background:var(--blue);color:#fff}
-
-/* Image */
 .img-area{border:2px dashed var(--border);border-radius:8px;padding:24px 16px;text-align:center;cursor:pointer;background:#FAFAFA}
 .img-area:hover{border-color:var(--blue)}
 .img-area svg{width:32px;height:32px;stroke:#BDBDBD;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin:0 auto 8px;display:block}
 .img-area p{font-size:13px;color:var(--muted)}
 .img-area small{font-size:11px;color:#9E9E9E}
 .preview-img{width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-top:8px;display:block}
-
-/* Login */
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:32px 20px;background:#fff;width:100%;max-width:430px;margin:0 auto}
 .login-logo{text-align:center;margin-bottom:32px}
 .login-logo svg{width:56px;height:56px;stroke:var(--blue);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .login-logo h1{font-size:20px;font-weight:700;color:var(--blue);margin-top:10px}
 .login-logo p{font-size:13px;color:var(--muted);margin-top:4px}
-
-/* Profile banner */
 .pbanner{background:var(--blue);color:#fff;border-radius:10px;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
 .pav{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
 .pname{font-size:16px;font-weight:600}
 .prole{font-size:12px;opacity:.85;margin-top:2px}
-
-/* Alert */
 .alert{padding:11px 13px;border-radius:8px;font-size:14px;margin-bottom:12px;border-left:3px solid}
 .alert-info{background:var(--blue-light);color:var(--blue);border-color:var(--blue)}
 .alert-ok{background:var(--green-light);color:var(--green);border-color:var(--green)}
 .alert-err{background:var(--red-light);color:var(--red);border-color:var(--red)}
-
-/* Empty */
 .empty{display:flex;flex-direction:column;align-items:center;padding:48px 24px;color:var(--muted);gap:10px}
 .empty svg{width:48px;height:48px;stroke:#BDBDBD;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-
-/* User chip */
 .uchip{display:flex;align-items:center;gap:10px;background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);cursor:pointer}
 .uchip:active{background:#F5F5F5}
 .uav{width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
-
-/* Loading */
 #ld{position:fixed;inset:0;background:rgba(255,255,255,.88);display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:12px}
 .spin{width:36px;height:36px;border:3px solid #E0E0E0;border-top-color:var(--blue);border-radius:50%;animation:sp .65s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 #ld p{font-size:14px;color:var(--muted)}
-
-/* Toast */
 #toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(10px);background:#212121;color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;opacity:0;transition:all .25s;z-index:998;pointer-events:none;white-space:nowrap;max-width:calc(100vw - 40px);text-align:center}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 #toast.ok{background:var(--green)}
 #toast.er{background:var(--red)}
-
 .divider{height:1px;background:var(--border);margin:12px 0}
 .mt8{margin-top:8px}
 .mt12{margin-top:12px}
@@ -193,7 +142,7 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
 <body>
 <div id="app">
 
-<!-- ══ LOGIN ══════════════════════════════════ -->
+<!-- LOGIN -->
 <div class="login-wrap" id="pg-login">
   <div class="login-logo">
     <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
@@ -221,7 +170,7 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
   <div id="lerr" style="display:none" class="alert alert-err mt12"></div>
 </div>
 
-<!-- ══ MAIN ══════════════════════════════════ -->
+<!-- MAIN -->
 <div id="main" style="display:none">
 
   <!-- DASHBOARD -->
@@ -506,28 +455,20 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
 </div><!-- /main -->
 </div><!-- /app -->
 
-<!-- Loading -->
 <div id="ld"><div class="spin"></div><p id="ld-txt">กำลังโหลด...</p></div>
-<!-- Toast -->
 <div id="toast"></div>
 
 <script>
-// ══════════════════════════════════════
-// CONFIG — แก้ URL ให้ตรงกับ GAS ของคุณ
-// ══════════════════════════════════════
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxx6lO5bvztiHA-CI1bzu2jovtvoWecaQo1r5nVXsU0ZHcHLxBToexd1yfNFQTePxM/exec';
 
-// ══ State ══
 let sess=null, master={}, allData=[], allTab='all', rptTab='all', allUsrs=[], hist=[];
 
-// ══ API ══
 async function api(p){
   if(sess?.token) p.token=sess.token;
   const r=await fetch(GAS_URL,{method:'POST',body:JSON.stringify(p)});
   return r.json();
 }
 
-// ══ UI helpers ══
 const ld=(m='กำลังโหลด...')=>{document.getElementById('ld-txt').textContent=m;document.getElementById('ld').style.display='flex'};
 const ul=()=>document.getElementById('ld').style.display='none';
 function toast(m,t=''){
@@ -537,7 +478,6 @@ function toast(m,t=''){
 }
 const $=id=>document.getElementById(id);
 
-// ══ Navigation ══
 function go(id,navEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   $(id).classList.add('on');
@@ -558,10 +498,9 @@ function go(id,navEl){
   if(id==='pg-new') initNewForm();
 }
 function back(){
-  hist.pop(); // ลบหน้าปัจจุบัน
+  hist.pop();
   const prev=hist[hist.length-1]||'pg-dash';
   if(prev==='pg-dash') hist=[];
-  // ไม่ push ซ้ำ แค่แสดง
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   $(prev).classList.add('on');
   const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set','pg-apv','pg-acc','pg-wip','pg-rpt','pg-usr','pg-mine','pg-all'];
@@ -570,9 +509,8 @@ function back(){
 }
 function goFilter(s){allTab=s;go('pg-all');}
 
-// ══ Auth ══
 function togglePw(){
-  const i=$('lp'),svg=$('pw-eye').querySelector('svg');
+  const i=$('lp');
   i.type=i.type==='password'?'text':'password';
 }
 async function doLogin(){
@@ -597,7 +535,7 @@ function startApp(){
   $('pg-login').style.display='none';
   $('main').style.display='block';
   setupMenus();
-  loadMaster(); // โหลด background ไม่รอ
+  loadMaster();
   go('pg-dash');
 }
 function hasRole(r){return sess?.user?.roles?.includes(r);}
@@ -612,23 +550,17 @@ function setupMenus(){
   $('m-set').style.display=adm?'flex':'none';
 }
 
-// ══ Master ══
 async function loadMaster(retry=0){
   try{
     const r=await api({action:'getMasterData'});
     if(r.success && r.data && Object.keys(r.data).length>0){
-      master=r.data;
-      fillMaster();
-      return true;
+      master=r.data; fillMaster(); return true;
     } else if(retry<3){
       await new Promise(res=>setTimeout(res,1500));
       return loadMaster(retry+1);
     }
   }catch(e){
-    if(retry<3){
-      await new Promise(res=>setTimeout(res,2000));
-      return loadMaster(retry+1);
-    }
+    if(retry<3){await new Promise(res=>setTimeout(res,2000));return loadMaster(retry+1);}
   }
   return false;
 }
@@ -639,18 +571,13 @@ function fillSel(id,type){
   el.innerHTML='<option value="">-- เลือก --</option>'+items.map(m=>`<option value="${m.value}">${m.display_text||m.value}</option>`).join('');
 }
 function fillMaster(){
-  // เรียกหลังจาก page แสดงแล้ว เพื่อให้ DOM elements พร้อม
   setTimeout(()=>{
-    fillSel('r-dept','department');
-    fillSel('uf-dp','department');
-    fillSel('r-type','request_type');
-    fillSel('r-cat','work_category');
-    fillSel('r-mach','machine_status');
-    fillSel('r-urg','urgency');
+    fillSel('r-dept','department'); fillSel('uf-dp','department');
+    fillSel('r-type','request_type'); fillSel('r-cat','work_category');
+    fillSel('r-mach','machine_status'); fillSel('r-urg','urgency');
   },50);
 }
 
-// ══ Dashboard ══
 async function loadDash(){
   const u=sess.user;
   $('d-name').textContent=u.full_name;
@@ -664,7 +591,6 @@ async function loadDash(){
   }catch(e){}
 }
 
-// ══ Status helpers ══
 const TAGS={'แจ้งซ่อม':'tag-new','อนุมัติ':'tag-ok','ไม่อนุมัติ':'tag-no','ช่างรับงาน':'tag-acc','กำลังดำเนินการ':'tag-wip','เสร็จสิ้น':'tag-done'};
 const LCOLOR={'แจ้งซ่อม':'#1976D2','อนุมัติ':'#2E7D32','ไม่อนุมัติ':'#C62828','ช่างรับงาน':'#E65100','กำลังดำเนินการ':'#6A1B9A','เสร็จสิ้น':'#00695C'};
 const UCLS={'สูงมาก':'u1','สูง':'u2','ปานกลาง':'u3','ต่ำ':'u4'};
@@ -682,7 +608,6 @@ function renderList(cid,data){
     </div>`).join('');
 }
 
-// ══ Load lists ══
 async function loadAll(){ld();try{const r=await api({action:'getAllRequests'});if(r.success){allData=r.data;renderFilteredAll();}}catch(e){toast('โหลดล้มเหลว','er');}finally{ul();}}
 async function loadMine(){ld();try{const r=await api({action:'getMyRequests'});if(r.success)renderList('ls-mine',r.data);}catch(e){}finally{ul();}}
 async function loadApv(){ld();try{const r=await api({action:'getPendingApproval'});if(r.success)renderList('ls-apv',r.data);else toast(r.message,'er');}catch(e){}finally{ul();}}
@@ -703,7 +628,6 @@ function renderFilteredAll(){
   renderList('ls-all',d);
 }
 
-// ══ Detail ══
 async function openDet(id){
   ld('กำลังโหลด...');
   try{const r=await api({action:'getRequestById',request_id:id});
@@ -761,7 +685,6 @@ function renderDet(r){
     ${cost}${act}`;
 }
 
-// ══ Workflow ══
 async function doApprove(id){
   if(!confirm('ยืนยันอนุมัติงาน '+id+'?'))return;
   ld('กำลังอนุมัติ...');
@@ -799,7 +722,6 @@ async function submitClose(){
   }finally{ul();$('btn-cl').disabled=false;}
 }
 
-// ══ New Request ══
 function initNewForm(){
   const u=sess.user;
   $('r-who').value=u.full_name+' ('+u.username+')';
@@ -809,33 +731,20 @@ function initNewForm(){
   $('r-avail').value=fmt(now);
   const fin=new Date(now); fin.setDate(fin.getDate()+7);
   $('r-end').value=fmt(fin);
-
   const doFill=()=>{
-    // fill ทุก dropdown ทันที (DOM พร้อมแล้วเพราะ page แสดงก่อน)
     ['r-dept','uf-dp'].forEach(id=>fillSel(id,'department'));
-    fillSel('r-type','request_type');
-    fillSel('r-cat','work_category');
-    fillSel('r-mach','machine_status');
-    fillSel('r-urg','urgency');
-    // pre-select department
+    fillSel('r-type','request_type'); fillSel('r-cat','work_category');
+    fillSel('r-mach','machine_status'); fillSel('r-urg','urgency');
     const dept=$('r-dept');
-    for(let i=0;i<dept.options.length;i++){
-      if(dept.options[i].value===u.department){dept.selectedIndex=i;break;}
-    }
+    for(let i=0;i<dept.options.length;i++){if(dept.options[i].value===u.department){dept.selectedIndex=i;break;}}
   };
-
-  if(Object.keys(master).length>0){
-    doFill();
-  } else {
-    // master ยังไม่มา — โหลดก่อนแล้ว fill
-    loadMaster().then(doFill);
-  }
+  if(Object.keys(master).length>0) doFill();
+  else loadMaster().then(doFill);
 }
-// ══ Image — preview + upload ══
+
 function prevImg(e){
   const file=e.target.files[0];
   if(!file) return;
-
   const reader=new FileReader();
   reader.onload=function(ev){
     const img=new Image();
@@ -850,11 +759,9 @@ function prevImg(e){
       canvas.width=w; canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
       const resized=canvas.toDataURL('image/jpeg',0.8);
-
       document.getElementById('img-prev').src=resized;
       document.getElementById('img-preview-wrap').style.display='block';
       document.getElementById('img-box').style.display='none';
-
       uploadImg(resized,'image/jpeg',file.name||('img_'+Date.now()+'.jpg'));
     };
     img.src=ev.target.result;
@@ -862,11 +769,8 @@ function prevImg(e){
   reader.readAsDataURL(file);
 }
 function removeImg(){
-  $('img-prev').src='';
-  $('img-preview-wrap').style.display='none';
-  $('img-box').style.display='block';
-  $('img-in').value='';
-  $('r-img').value='';
+  $('img-prev').src=''; $('img-preview-wrap').style.display='none';
+  $('img-box').style.display='block'; $('img-in').value=''; $('r-img').value='';
 }
 async function uploadImg(data,mime,name){
   $('img-up').style.display='block';
@@ -878,30 +782,22 @@ async function uploadImg(data,mime,name){
   finally{$('img-up').style.display='none';}
 }
 function clearForm(){
-  
   ['r-type','r-cat','r-mach','r-urg'].forEach(id=>{const el=$(id);if(el)el.selectedIndex=0;});
   $('r-det').value=''; removeImg();
 }
 async function submitReq(){
-  // ตรวจแต่ละ field พร้อมบอกชื่อที่ขาด
   const checks=[
-    {id:'r-dept',  label:'หน่วยงาน'},
-    {id:'r-type',  label:'ประเภทการแจ้ง'},
-    {id:'r-avail', label:'วันที่เข้าซ่อมได้'},
-    {id:'r-end',   label:'วันที่ต้องการให้เสร็จ'},
-    {id:'r-cat',   label:'หมวดหมู่งาน'},
-    {id:'r-mach',  label:'สถานะเครื่องจักร'},
-    {id:'r-det',   label:'รายละเอียด / สถานที่'},
-    {id:'r-img',   label:'รูปภาพ'},
-    {id:'r-urg',   label:'ระดับความเร่งด่วน'},
+    {id:'r-dept',label:'หน่วยงาน'},{id:'r-type',label:'ประเภทการแจ้ง'},
+    {id:'r-avail',label:'วันที่เข้าซ่อมได้'},{id:'r-end',label:'วันที่ต้องการให้เสร็จ'},
+    {id:'r-cat',label:'หมวดหมู่งาน'},{id:'r-mach',label:'สถานะเครื่องจักร'},
+    {id:'r-det',label:'รายละเอียด / สถานที่'},{id:'r-img',label:'รูปภาพ'},
+    {id:'r-urg',label:'ระดับความเร่งด่วน'},
   ];
   for(const c of checks){
     const v=$(c.id).value.trim();
     if(!v){toast('กรุณากรอก: '+c.label,'er');$(c.id).focus();return;}
   }
-  // ตรวจรูปว่า upload เสร็จแล้วยัง
   if($('img-up').style.display!=='none'){toast('รอรูปภาพอัปโหลดเสร็จก่อน','er');return;}
-
   $('btn-sr').disabled=true; ld('กำลังส่งข้อมูล...');
   try{
     const r=await api({action:'createRequest',
@@ -917,7 +813,6 @@ async function submitReq(){
   finally{ul();$('btn-sr').disabled=false;}
 }
 
-// ══ Report ══
 function initRpt(){
   const y=$('rpt-y'); if(!y.options.length){
     const cur=new Date().getFullYear();
@@ -927,9 +822,10 @@ function initRpt(){
 }
 async function loadRpt(){
   ld();
-  try{const r=await api({action:'getReport',report_type:rptTab,month:$('rpt-m').value,year:$('rpt-y').value});
+  try{
+    const r=await api({action:'getReport',report_type:rptTab,month:$('rpt-m').value,year:$('rpt-y').value});
     if(r.success){
-      const d=r.data,s=r.summary;
+      const d=r.data, s=r.summary;
       const done=d.filter(x=>x.current_status==='เสร็จสิ้น').length;
       const pend=d.filter(x=>x.current_status!=='เสร็จสิ้น'&&x.current_status!=='ไม่อนุมัติ').length;
       const cost=(s?.total_cost||d.reduce((a,x)=>a+(+x.total_cost||0),0));
@@ -939,49 +835,43 @@ async function loadRpt(){
         <div class="scard s3" style="cursor:default"><div class="snum">${pend}</div><div class="slbl">ค้างอยู่</div></div>
         <div class="scard" style="cursor:default"><div class="snum" style="font-size:20px;color:var(--orange)">${cost.toLocaleString()}</div><div class="slbl">ค่าใช้จ่าย (฿)</div></div>`;
 
-      // กราฟค่าใช้จ่ายตามหน่วยงาน
-    const byDept = (() => {
-          if(s?.by_department && Object.keys(s.by_department).length > 0) return s.by_department;
-          const bd = {};
-          d.filter(x=>x.current_status==='เสร็จสิ้น').forEach(x=>{
-            if(!bd[x.department]) bd[x.department]={count:0,total:0};
-            bd[x.department].count++;
-            bd[x.department].total += (+x.total_cost||0);
-          });
-          return bd;
-        })();
-      const deptKeys = Object.keys(byDept);
-      if(deptKeys.length > 0){
-        const maxVal = Math.max(...deptKeys.map(k=>byDept[k].total));
-        const bars = deptKeys.map(k=>{
-          const pct = maxVal>0 ? Math.round(byDept[k].total/maxVal*100) : 0;
-          return `
-            <div style="margin-bottom:10px">
-              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
-                <span style="color:#424242;font-weight:500">${k}</span>
-                <span style="color:var(--orange);font-weight:600">${byDept[k].total.toLocaleString()} ฿</span>
-              </div>
-              <div style="background:#F5F5F5;border-radius:20px;height:10px;overflow:hidden">
-                <div style="background:var(--orange);width:${pct}%;height:100%;border-radius:20px;transition:width .4s"></div>
-              </div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">${byDept[k].count} งาน</div>
-            </div>`;
+      const byDept=(()=>{
+        if(s?.by_department && Object.keys(s.by_department).length>0) return s.by_department;
+        const bd={};
+        d.filter(x=>x.current_status==='เสร็จสิ้น').forEach(x=>{
+          if(!bd[x.department]) bd[x.department]={count:0,total:0};
+          bd[x.department].count++;
+          bd[x.department].total+=(+x.total_cost||0);
+        });
+        return bd;
+      })();
+      const deptKeys=Object.keys(byDept);
+      if(deptKeys.length>0){
+        const maxVal=Math.max(...deptKeys.map(k=>byDept[k].total));
+        const bars=deptKeys.map(k=>{
+          const pct=maxVal>0?Math.round(byDept[k].total/maxVal*100):0;
+          return `<div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+              <span style="color:#424242;font-weight:500">${k}</span>
+              <span style="color:var(--orange);font-weight:600">${byDept[k].total.toLocaleString()} ฿</span>
+            </div>
+            <div style="background:#F5F5F5;border-radius:20px;height:10px;overflow:hidden">
+              <div style="background:var(--orange);width:${pct}%;height:100%;border-radius:20px;transition:width .4s"></div>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">${byDept[k].count} งาน</div>
+          </div>`;
         }).join('');
-        $('rpt-sum').innerHTML += `
+        $('rpt-sum').innerHTML+=`
           <div class="card" style="grid-column:1/-1"><div class="card-p">
             <div class="sec" style="margin-bottom:12px">ค่าใช้จ่ายตามหน่วยงาน</div>
             ${bars}
           </div></div>`;
       }
-
       renderList('rpt-ls',d);
     }
   }catch(e){}finally{ul();}
 }
-  }catch(e){}finally{ul();}
-}
 
-// ══ Users ══
 async function loadUsr(){ld();try{const r=await api({action:'getUsers'});if(r.success){allUsrs=r.data;renderUsr(r.data);}else toast(r.message,'er');}finally{ul();}}
 function filterUsr(){const q=$('sch-usr').value.toLowerCase();renderUsr(allUsrs.filter(u=>u.username.toLowerCase().includes(q)||u.full_name.toLowerCase().includes(q)));}
 function renderUsr(us){
@@ -1020,20 +910,19 @@ async function submitUF(){
   }finally{ul();$('btn-uf').disabled=false;}
 }
 
-// ══ Settings ══
 async function loadSet(){ld();try{const r=await api({action:'getSettings'});if(r.success){const s=r.data;$('set-nm').value=s.system_name||'';$('set-url').value=s.app_url||'';$('set-tk').value=s.telegram_bot_token||s.bot_token_telegram||'';$('set-gid').value=s.telegram_group_id||'';$('set-drv').value=s.google_drive_folder_id||'';}}finally{ul();}}
 async function saveSets(){ld('กำลังบันทึก...');try{const r=await api({action:'updateSettings',settings:{system_name:$('set-nm').value,app_url:$('set-url').value,telegram_bot_token:$('set-tk').value,telegram_group_id:$('set-gid').value,google_drive_folder_id:$('set-drv').value}});toast(r.message,r.success?'ok':'er');}finally{ul();}}
 async function clearAll(){if(!confirm('ล้างข้อมูลทั้งหมด?'))return;if(!confirm('ยืนยันอีกครั้ง — ลบถาวร!'))return;ld('กำลังล้างข้อมูล...');try{const r=await api({action:'clearFormData'});toast(r.message,r.success?'ok':'er');}finally{ul();}}
-// ══ Drive Image URL ══
-function driveImg(url) {
-  if (!url) return '';
-  let m = url.match(/\/file\/d\/([^/]+)/);
-  if (m) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
-  m = url.match(/[?&]id=([^&]+)/);
-  if (m) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
+
+function driveImg(url){
+  if(!url) return '';
+  let m=url.match(/\/file\/d\/([^/]+)/);
+  if(m) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
+  m=url.match(/[?&]id=([^&]+)/);
+  if(m) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
   return url;
 }
-// ══ Init ══
+
 window.addEventListener('load',()=>{
   checkSess();
   $('lp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
