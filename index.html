@@ -940,7 +940,7 @@ async function loadRpt(){
         <div class="scard" style="cursor:default"><div class="snum" style="font-size:20px;color:var(--orange)">${cost.toLocaleString()}</div><div class="slbl">ค่าใช้จ่าย (฿)</div></div>`;
 
       // กราฟค่าใช้จ่ายตามหน่วยงาน
-      const byDept = s?.by_department || {};
+      const byDept = s?.by_department || (() => { const bd={}; d.filter(x=>x.current_status==='เสร็จสิ้น').forEach(x=>{ if(!bd[x.department])bd[x.department]={count:0,total:0}; bd[x.department].count++; bd[x.department].total+=(+x.total_cost||0); }); return bd; })();
       const deptKeys = Object.keys(byDept);
       if(deptKeys.length > 0){
         const maxVal = Math.max(...deptKeys.map(k=>byDept[k].total));
