@@ -838,7 +838,6 @@ function prevImg(e){
   reader.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      // resize max 800px, quality 0.7 — ให้ไฟล์เล็กพอสำหรับ GAS
       const MAX=800, QUALITY=0.70;
       let w=img.width, h=img.height;
       if(w>MAX||h>MAX){
@@ -849,11 +848,10 @@ function prevImg(e){
       canvas.width=w; canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
       const resized=canvas.toDataURL('image/jpeg',QUALITY);
-      // แสดง preview
-      $('img-prev').src=resized;
+      // แสดง wrap ก่อน แล้วค่อย set src
       $('img-preview-wrap').style.display='block';
       $('img-box').style.display='none';
-      // upload
+      $('img-prev').src=resized;
       uploadImg(resized,'image/jpeg','img_'+Date.now()+'.jpg');
     };
     img.src=ev.target.result;
