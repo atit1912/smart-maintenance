@@ -938,8 +938,37 @@ async function loadRpt(){
         <div class="scard s1" style="cursor:default"><div class="snum">${done}</div><div class="slbl">เสร็จสิ้น</div></div>
         <div class="scard s3" style="cursor:default"><div class="snum">${pend}</div><div class="slbl">ค้างอยู่</div></div>
         <div class="scard" style="cursor:default"><div class="snum" style="font-size:20px;color:var(--orange)">${cost.toLocaleString()}</div><div class="slbl">ค่าใช้จ่าย (฿)</div></div>`;
+
+      // กราฟค่าใช้จ่ายตามหน่วยงาน
+      const byDept = s?.by_department || {};
+      const deptKeys = Object.keys(byDept);
+      if(deptKeys.length > 0){
+        const maxVal = Math.max(...deptKeys.map(k=>byDept[k].total));
+        const bars = deptKeys.map(k=>{
+          const pct = maxVal>0 ? Math.round(byDept[k].total/maxVal*100) : 0;
+          return `
+            <div style="margin-bottom:10px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                <span style="color:#424242;font-weight:500">${k}</span>
+                <span style="color:var(--orange);font-weight:600">${byDept[k].total.toLocaleString()} ฿</span>
+              </div>
+              <div style="background:#F5F5F5;border-radius:20px;height:10px;overflow:hidden">
+                <div style="background:var(--orange);width:${pct}%;height:100%;border-radius:20px;transition:width .4s"></div>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">${byDept[k].count} งาน</div>
+            </div>`;
+        }).join('');
+        $('rpt-sum').innerHTML += `
+          <div class="card" style="grid-column:1/-1"><div class="card-p">
+            <div class="sec" style="margin-bottom:12px">ค่าใช้จ่ายตามหน่วยงาน</div>
+            ${bars}
+          </div></div>`;
+      }
+
       renderList('rpt-ls',d);
     }
+  }catch(e){}finally{ul();}
+}
   }catch(e){}finally{ul();}
 }
 
