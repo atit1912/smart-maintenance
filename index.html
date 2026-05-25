@@ -726,7 +726,7 @@ function renderDet(r){
   if(canStart) act+=`<button class="btn btn-orange mt12" onclick="doStart('${r.request_id}')">เริ่มดำเนินการ</button>`;
   if(canClose) act+=`<button class="btn btn-green mt12" onclick="gotoClose('${r.request_id}')">ปิดงาน</button>`;
 
-  const img=r.image_url?`<img src="${r.image_url}" class="preview-img" style="margin-bottom:12px" onerror="this.style.display='none'">`:'';
+  const img=r.image_url?`<img src="${driveImg(r.image_url)}" class="preview-img" style="margin-bottom:12px" onerror="this.style.display='none'">`:'';
 
   const cost=r.current_status==='เสร็จสิ้น'?`
     <div class="card"><div class="card-p">
@@ -973,7 +973,15 @@ async function submitUF(){
 async function loadSet(){ld();try{const r=await api({action:'getSettings'});if(r.success){const s=r.data;$('set-nm').value=s.system_name||'';$('set-url').value=s.app_url||'';$('set-tk').value=s.telegram_bot_token||s.bot_token_telegram||'';$('set-gid').value=s.telegram_group_id||'';$('set-drv').value=s.google_drive_folder_id||'';}}finally{ul();}}
 async function saveSets(){ld('กำลังบันทึก...');try{const r=await api({action:'updateSettings',settings:{system_name:$('set-nm').value,app_url:$('set-url').value,telegram_bot_token:$('set-tk').value,telegram_group_id:$('set-gid').value,google_drive_folder_id:$('set-drv').value}});toast(r.message,r.success?'ok':'er');}finally{ul();}}
 async function clearAll(){if(!confirm('ล้างข้อมูลทั้งหมด?'))return;if(!confirm('ยืนยันอีกครั้ง — ลบถาวร!'))return;ld('กำลังล้างข้อมูล...');try{const r=await api({action:'clearFormData'});toast(r.message,r.success?'ok':'er');}finally{ul();}}
-
+// ══ Drive Image URL ══
+function driveImg(url) {
+  if (!url) return '';
+  let m = url.match(/\/file\/d\/([^/]+)/);
+  if (m) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
+  m = url.match(/[?&]id=([^&]+)/);
+  if (m) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
+  return url;
+}
 // ══ Init ══
 window.addEventListener('load',()=>{
   checkSess();
