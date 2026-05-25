@@ -836,14 +836,27 @@ function prevImg(e){
   const f=e.target.files[0]; if(!f)return;
   const reader=new FileReader();
   reader.onload=ev=>{
+    const wrap=document.getElementById('img-preview-wrap');
+    const imgEl=document.getElementById('img-prev');
+    const box=document.getElementById('img-box');
+    wrap.style.display='block';
+    box.style.display='none';
+    imgEl.src=ev.target.result;
+    // resize แล้ว upload
     const img=new Image();
     img.onload=()=>{
-      const MAX=800, QUALITY=0.70;
-      let w=img.width, h=img.height;
-      if(w>MAX||h>MAX){
-        if(w>h){h=Math.round(h*MAX/w);w=MAX;}
-        else{w=Math.round(w*MAX/h);h=MAX;}
-      }
+      const MAX=800,Q=0.70;
+      let w=img.width,h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      const c=document.createElement('canvas');
+      c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      uploadImg(c.toDataURL('image/jpeg',Q),'image/jpeg','img_'+Date.now()+'.jpg');
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
+}
       const canvas=document.createElement('canvas');
       canvas.width=w; canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
