@@ -738,7 +738,10 @@ async function doStart(id){
 function gotoClose(id){
   $('cl-id').textContent='ปิดงานเลขที่: '+id;
   $('cl-rid').value=id; $('cl-det').value='';
-  $('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();
+  $('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();$('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();
+removeCloseImg(); $('cl-rating').value=0;
+document.querySelectorAll('#star-rating span').forEach(s=>s.style.opacity='0.3');
+$('rating-label').textContent='ยังไม่ได้ให้คะแนน'; $('rating-label').style.color='var(--muted)';
   go('pg-close');
 }
 function calcCost(){
@@ -746,8 +749,9 @@ function calcCost(){
   $('cp').textContent=p.toFixed(2); $('cl').textContent=l.toFixed(2);
   $('co').textContent=o.toFixed(2); $('ct').textContent=(p+l+o).toFixed(2)+' บาท';
 }
-async function submitClose(){
-  const det=$('cl-det').value.trim(); if(!det){toast('กรุณากรอกรายละเอียด','er');return;}
+try{const r=await api({action:'closeRequest',request_id:$('cl-rid').value,repair_detail:det,
+    cost_part:$('cl-p').value,cost_labor:$('cl-l').value,cost_other:$('cl-o').value,
+    remark:$('cl-rem').value,close_image_url:$('cl-img').value,rating_score:$('cl-rating').value});
   $('btn-cl').disabled=true; ld('กำลังปิดงาน...');
   try{const r=await api({action:'closeRequest',request_id:$('cl-rid').value,repair_detail:det,
     cost_part:$('cl-p').value,cost_labor:$('cl-l').value,cost_other:$('cl-o').value,remark:$('cl-rem').value});
