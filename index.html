@@ -694,12 +694,36 @@ function renderDet(r){
       <div class="crow tot"><span>รวม</span><span style="color:var(--blue)">${(+r.total_cost||0).toLocaleString()} บาท</span></div>
     </div></div>`:'';
 
-  $('det-body').innerHTML=`
+ $('det-body').innerHTML=`
     <div class="card"><div class="card-p">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
         <span class="tag ${TAGS[r.current_status]||'tag-new'}" style="font-size:14px;padding:5px 14px">${r.current_status}</span>
         <span class="${UCLS[r.urgency]||''}" style="font-size:13px">${r.urgency}</span>
       </div>
+
+      <!-- Flow Work -->
+      <div style="display:flex;align-items:center;justify-content:center;margin-bottom:16px;overflow-x:auto;padding:8px 0">
+        ${['แจ้งซ่อม','อนุมัติ','ช่างรับงาน','กำลังดำเนินการ','เสร็จสิ้น'].map((s,i,arr)=>{
+          const icons=['📋','✅','👷','🔧','🏁'];
+          const colors={'แจ้งซ่อม':'#1976D2','อนุมัติ':'#2E7D32','ช่างรับงาน':'#E65100','กำลังดำเนินการ':'#6A1B9A','เสร็จสิ้น':'#00695C'};
+          const statusOrder=['แจ้งซ่อม','อนุมัติ','ช่างรับงาน','กำลังดำเนินการ','เสร็จสิ้น'];
+          const curIdx=statusOrder.indexOf(r.current_status);
+          const isDone=i<=curIdx;
+          const isCur=i===curIdx;
+          return `<div style="display:flex;align-items:center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+              <div style="width:40px;height:40px;border-radius:50%;background:${isDone?colors[s]:'#E0E0E0'};display:flex;align-items:center;justify-content:center;font-size:18px;${isCur?'box-shadow:0 0 0 3px '+colors[s]+'40':''}">
+                ${icons[i]}
+              </div>
+              <span style="font-size:10px;color:${isDone?colors[s]:'#9E9E9E'};font-weight:${isCur?'700':'400'};text-align:center;width:52px">${s}</span>
+            </div>
+            ${i<arr.length-1?`<div style="width:20px;height:2px;background:${i<curIdx?colors[arr[i+1]]:'#E0E0E0'};margin-bottom:20px;flex-shrink:0"></div>`:''}
+          </div>`;
+        }).join('')}
+      </div>
+
+      ${r.rating_score?`<div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--orange);font-weight:600">คะแนนการซ่อม: ${'⭐'.repeat(+r.rating_score)} (${r.rating_score}/5)</div>`:''}
+
       ${img}
       <div class="dr"><span class="dk">ผู้แจ้ง</span><span class="dv">${r.requester_name}</span></div>
       <div class="dr"><span class="dk">หน่วยงาน</span><span class="dv">${r.department}</span></div>
@@ -714,6 +738,7 @@ function renderDet(r){
       ${r.rejected_by?`<div class="dr"><span class="dk">ไม่อนุมัติโดย</span><span class="dv" style="color:var(--red)">${r.rejected_by}<br>${r.remark||''}</span></div>`:''}
       ${r.assigned_to?`<div class="dr"><span class="dk">ช่างรับงาน</span><span class="dv">${r.assigned_to} (${fdate(r.accepted_at)})</span></div>`:''}
       ${r.repair_detail?`<div class="dr"><span class="dk">วิธีซ่อม</span><span class="dv">${r.repair_detail}</span></div>`:''}
+      ${r.close_image_url?`<div class="dr"><span class="dk">รูปหลังซ่อม</span><span class="dv"><img src="${driveImg(r.close_image_url)}" class="preview-img" onerror="this.style.display='none'"></span></div>`:''}
     </div></div>
     ${cost}${act}`;
 }
