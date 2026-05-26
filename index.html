@@ -622,7 +622,7 @@ async function doLogin(){
   try{
     const r=await api({action:'login',username:u,password:p});
     if(r.success){
-      sess=r; localStorage.setItem('sm_s',JSON.stringify(sess));
+      sess=r; sess.loginTime=Date.now(); localStorage.setItem('sm_s',JSON.stringify(sess));
       startApp();
     }else{
       $('lerr').textContent=r.message; $('lerr').style.display='block';
@@ -631,7 +631,20 @@ async function doLogin(){
   finally{$('btn-login').disabled=false;$('btn-login').textContent='เข้าสู่ระบบ';}
 }
 function doLogout(){if(!confirm('ออกจากระบบ?'))return;sess=null;localStorage.removeItem('sm_s');location.reload();}
-function checkSess(){const s=localStorage.getItem('sm_s');if(s){sess=JSON.parse(s);startApp();}}
+function checkSess(){
+  const s=localStorage.getItem('sm_s');
+  if(s){
+    sess=JSON.parse(s);
+    const h8=8*60*60*1000;
+    if(Date.now()-(sess.loginTime||0)>h8){
+      sess=null;
+      localStorage.removeItem('sm_s');
+      toast('หมดเวลาการใช้งาน กรุณาเข้าสู่ระบบใหม่','er');
+      return;
+    }
+    startApp();
+  }
+}
 function startApp(){
   $('pg-login').style.display='none';
   $('main').style.display='block';
