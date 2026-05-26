@@ -1329,117 +1329,145 @@ function exportExcel(title, mLabel, yLabel){
 }
 
 function exportPDF(title, mLabel, yLabel){
-  if(typeof window.jspdf==='undefined'){toast('กำลังโหลด library...','');return;}
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const pageW=210;
-  let y=0;
+  const incSum=$('exp-summary').checked;
+  const incList=$('exp-list').checked;
+  const incCost=$('exp-cost').checked;
+  const incRating=$('exp-rating').checked;
 
-  // Header
-  doc.setFillColor(25,118,210);
-  doc.rect(0,0,pageW,28,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(16); doc.setFont('helvetica','bold');
-  doc.text('Smart Maintenance',14,12);
-  doc.setFontSize(10); doc.setFont('helvetica','normal');
-  doc.text('รายงานประจำเดือน '+mLabel+' '+yLabel,14,20);
-  doc.text('พิมพ์: '+new Date().toLocaleDateString('th-TH'),pageW-14,20,{align:'right'});
-  y=36;
+  const done=expData.filter(r=>r.current_status==='เสร็จสิ้น').length;
+  const pend=expData.filter(r=>r.current_status!=='เสร็จสิ้น'&&r.current_status!=='ไม่อนุมัติ').length;
+  const totalCost=expData.reduce((a,r)=>a+(+r.total_cost||0),0);
+  const rated=expData.filter(r=>r.rating_score);
+  const avgRating=rated.length?(rated.reduce((a,r)=>a+(+r.rating_score||0),0)/rated.length).toFixed(1):'-';
 
-  doc.setTextColor(30,30,30);
+  const byDept={};
+  expData.filter(r=>r.current_status==='เสร็จสิ้น').forEach(r=>{
+    if(!byDept[r.department]) byDept[r.department]={count:0,total:0};
+    byDept[r.department].count++;
+    byDept[r.department].total+=(+r.total_cost||0);
+  });
 
-  // สรุปสถิติ
-  if($('exp-summary').checked){
-    const done=expData.filter(r=>r.current_status==='เสร็จสิ้น').length;
-    const pend=expData.filter(r=>r.current_status!=='เสร็จสิ้น'&&r.current_status!=='ไม่อนุมัติ').length;
-    const totalCost=expData.reduce((a,r)=>a+(+r.total_cost||0),0);
-    doc.setFontSize(11); doc.setFont('helvetica','bold');
-    doc.text('สรุปสถิติ',14,y); y+=6;
-    doc.setDrawColor(200,200,200); doc.line(14,y,pageW-14,y); y+=6;
-    doc.setFont('helvetica','normal'); doc.setFontSize(10);
-    const stats=[['งานทั้งหมด',expData.length],['เสร็จสิ้น',done],['ค้างอยู่',pend],['ค่าใช้จ่ายรวม',totalCost.toLocaleString()+' บาท']];
-    stats.forEach(s=>{
-      doc.text(s[0],14,y);
-      doc.text(String(s[1]),pageW-14,y,{align:'right'});
-      y+=7;
-    });
-    y+=4;
-  }
+  const TAGS_COLOR={'แจ้งซ่อม':'#1976D2','อนุมัติ':'#2E7D32','ไม่อนุมัติ':'#C62828','ช่างรับงาน':'#E65100','กำลังดำเนินการ':'#6A1B9A','เสร็จสิ้น':'#00695C'};
+  const TAGS_BG={'แจ้งซ่อม':'#E3F0FB','อนุมัติ':'#E8F5E9','ไม่อนุมัติ':'#FFEBEE','ช่างรับงาน':'#FFF3E0','กำลังดำเนินการ':'#F3E5F5','เสร็จสิ้น':'#E0F2F1'};
 
-  // รายการงาน
-  if($('exp-list').checked){
-    doc.setFontSize(11); doc.setFont('helvetica','bold');
-    doc.text('รายการงาน',14,y); y+=6;
-    doc.setDrawColor(200,200,200); doc.line(14,y,pageW-14,y); y+=4;
-    doc.setFontSize(8); doc.setFont('helvetica','bold');
-    doc.setFillColor(240,242,245);
-    doc.rect(14,y-3,pageW-28,7,'F');
-    doc.text('เลขงาน',16,y+1);
-    doc.text('หมวดหมู่/ประเภท',42,y+1);
-    doc.text('หน่วยงาน',110,y+1);
-    doc.text('สถานะ',145,y+1);
-    doc.text('รวม(฿)',175,y+1);
-    y+=8;
-    doc.setFont('helvetica','normal');
-    expData.forEach((r,i)=>{
-      if(y>270){doc.addPage();y=20;}
-      if(i%2===0){doc.setFillColor(250,250,250);doc.rect(14,y-3,pageW-28,7,'F');}
-      doc.setTextColor(25,118,210); doc.text(r.request_id||'',16,y+1);
-      doc.setTextColor(30,30,30);
-      const cat=(r.work_category||'')+(r.request_type?' - '+r.request_type:'');
-      doc.text(cat.substring(0,28),42,y+1);
-      doc.text((r.department||'').substring(0,14),110,y+1);
-      doc.text(r.current_status||'',145,y+1);
-      doc.text((+r.total_cost||0).toLocaleString(),pageW-14,y+1,{align:'right'});
-      y+=7;
-    });
-    y+=4;
-  }
+  const statusBadge=s=>`<span style="background:${TAGS_BG[s]||'#eee'};color:${TAGS_COLOR[s]||'#333'};font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500">${s}</span>`;
 
-  // ค่าใช้จ่ายตามหน่วยงาน
-  if($('exp-cost').checked){
-    if(y>230){doc.addPage();y=20;}
-    doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30);
-    doc.text('ค่าใช้จ่ายตามหน่วยงาน',14,y); y+=6;
-    doc.setDrawColor(200,200,200); doc.line(14,y,pageW-14,y); y+=4;
-    const byDept={};
-    expData.filter(r=>r.current_status==='เสร็จสิ้น').forEach(r=>{
-      if(!byDept[r.department]) byDept[r.department]={count:0,total:0};
-      byDept[r.department].count++;
-      byDept[r.department].total+=(+r.total_cost||0);
-    });
-    doc.setFontSize(8); doc.setFont('helvetica','bold');
-    doc.setFillColor(240,242,245);
-    doc.rect(14,y-3,pageW-28,7,'F');
-    doc.text('หน่วยงาน',16,y+1);
-    doc.text('จำนวนงาน',110,y+1);
-    doc.text('รวม (฿)',pageW-14,y+1,{align:'right'});
-    y+=8;
-    doc.setFont('helvetica','normal');
-    let grandTotal=0;
-    Object.keys(byDept).forEach((k,i)=>{
-      if(i%2===0){doc.setFillColor(250,250,250);doc.rect(14,y-3,pageW-28,7,'F');}
-      doc.setTextColor(30,30,30);
-      doc.text(k,16,y+1);
-      doc.text(String(byDept[k].count),110,y+1);
-      doc.text(byDept[k].total.toLocaleString(),pageW-14,y+1,{align:'right'});
-      grandTotal+=byDept[k].total;
-      y+=7;
-    });
-    doc.setFont('helvetica','bold');
-    doc.text('รวมทั้งหมด',16,y+1);
-    doc.text(grandTotal.toLocaleString(),pageW-14,y+1,{align:'right'});
-    y+=10;
-  }
+  const listRows=expData.map((r,i)=>`
+    <tr style="background:${i%2===0?'#fff':'#F9FAFB'}">
+      <td style="color:#1976D2;font-weight:600">${r.request_id}</td>
+      <td>${new Date(r.created_at).toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'2-digit'})}</td>
+      <td>${r.requester_name||''}</td>
+      <td>${r.department||''}</td>
+      <td>${r.work_category||''}</td>
+      <td>${statusBadge(r.current_status)}</td>
+      <td style="text-align:right">${(+r.total_cost||0).toLocaleString()}</td>
+      <td style="text-align:center">${r.rating_score?'⭐'.repeat(+r.rating_score):'-'}</td>
+    </tr>`).join('');
 
-  // Footer
-  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(150,150,150);
-  doc.text('Smart Maintenance | ศูนย์วิจัยเพชรบุรี | พิมพ์โดย: '+(sess?.user?.full_name||''),pageW/2,287,{align:'center'});
+  const deptRows=Object.keys(byDept).map((k,i)=>`
+    <tr style="background:${i%2===0?'#fff':'#F9FAFB'}">
+      <td>${k}</td>
+      <td style="text-align:center">${byDept[k].count}</td>
+      <td style="text-align:right">${byDept[k].total.toLocaleString()}</td>
+    </tr>`).join('');
 
-  const fname='SmartMaintenance_'+mLabel+yLabel+'.pdf';
-  doc.save(fname);
-  toast('ดาวน์โหลด PDF สำเร็จ','ok');
+  const html=`<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>รายงาน Smart Maintenance ${mLabel} ${yLabel}</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:#F0F2F5;color:#1a1a1a;font-size:14px}
+.wrap{max-width:800px;margin:0 auto;background:#fff}
+.header{background:#1976D2;color:#fff;padding:20px 24px;display:flex;justify-content:space-between;align-items:flex-start}
+.header h1{font-size:20px;font-weight:700;margin-bottom:2px}
+.header p{font-size:12px;opacity:0.85}
+.header-right{text-align:right;font-size:12px;opacity:0.85}
+.body{padding:20px 24px}
+.section{margin-bottom:20px}
+.section-title{font-size:13px;font-weight:600;color:#757575;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #E0E0E0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:4px}
+.stat{border-radius:8px;padding:12px 14px}
+.stat-num{font-size:24px;font-weight:700;line-height:1}
+.stat-lbl{font-size:12px;margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#F0F2F5;padding:8px 10px;text-align:left;font-weight:600;color:#424242;font-size:11px}
+td{padding:8px 10px;border-bottom:0.5px solid #F0F2F5;vertical-align:middle}
+.footer{text-align:center;font-size:11px;color:#9E9E9E;padding:16px;border-top:1px solid #E0E0E0}
+.print-btn{position:fixed;bottom:24px;right:24px;background:#1976D2;color:#fff;border:none;border-radius:50px;padding:12px 24px;font-size:15px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(25,118,210,0.4);display:flex;align-items:center;gap:8px;z-index:99}
+.print-btn:active{opacity:0.85}
+@media print{.print-btn{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div>
+      <h1>Smart Maintenance</h1>
+      <p>ศูนย์วิจัยเพชรบุรี</p>
+      <p style="margin-top:4px">รายงานประจำเดือน ${mLabel} ${yLabel}</p>
+    </div>
+    <div class="header-right">
+      <p>พิมพ์โดย: ${sess?.user?.full_name||''}</p>
+      <p style="margin-top:4px">วันที่: ${new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'long',year:'numeric'})}</p>
+    </div>
+  </div>
+  <div class="body">
+    ${incSum?`
+    <div class="section">
+      <div class="section-title">สรุปสถิติ</div>
+      <div class="stats">
+        <div class="stat" style="background:#E3F0FB"><div class="stat-num" style="color:#1976D2">${expData.length}</div><div class="stat-lbl" style="color:#1256A0">งานทั้งหมด</div></div>
+        <div class="stat" style="background:#E8F5E9"><div class="stat-num" style="color:#2E7D32">${done}</div><div class="stat-lbl" style="color:#1B5E20">เสร็จสิ้น</div></div>
+        <div class="stat" style="background:#FFEBEE"><div class="stat-num" style="color:#C62828">${pend}</div><div class="stat-lbl" style="color:#B71C1C">ค้างอยู่</div></div>
+        <div class="stat" style="background:#FFF3E0"><div class="stat-num" style="color:#E65100;font-size:18px">${totalCost.toLocaleString()}</div><div class="stat-lbl" style="color:#BF360C">ค่าใช้จ่าย (฿)</div></div>
+        ${incRating?`<div class="stat" style="background:#FFF8E1;grid-column:1/-1"><div class="stat-num" style="color:#F9A825">${avgRating}</div><div class="stat-lbl" style="color:#F57F17">คะแนนเฉลี่ย (จาก 5)</div></div>`:''}
+      </div>
+    </div>`:''}
+
+    ${incList?`
+    <div class="section">
+      <div class="section-title">รายการงาน (${expData.length} งาน)</div>
+      <table>
+        <thead><tr>
+          <th>เลขงาน</th><th>วันที่</th><th>ผู้แจ้ง</th><th>หน่วยงาน</th><th>หมวดหมู่</th><th>สถานะ</th><th style="text-align:right">รวม (฿)</th><th style="text-align:center">คะแนน</th>
+        </tr></thead>
+        <tbody>${listRows}</tbody>
+      </table>
+    </div>`:''}
+
+    ${incCost?`
+    <div class="section">
+      <div class="section-title">ค่าใช้จ่ายตามหน่วยงาน</div>
+      <table>
+        <thead><tr><th>หน่วยงาน</th><th style="text-align:center">จำนวนงาน</th><th style="text-align:right">รวม (฿)</th></tr></thead>
+        <tbody>
+          ${deptRows}
+          <tr style="font-weight:700;border-top:2px solid #E0E0E0">
+            <td>รวมทั้งหมด</td>
+            <td style="text-align:center">${expData.filter(r=>r.current_status==='เสร็จสิ้น').length}</td>
+            <td style="text-align:right;color:#1976D2">${totalCost.toLocaleString()}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`:''}
+  </div>
+  <div class="footer">Smart Maintenance | ศูนย์วิจัยเพชรบุรี | ${sess?.user?.full_name||''}</div>
+</div>
+<button class="print-btn" onclick="window.print()">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  พิมพ์ / บันทึก PDF
+</button>
+</body></html>`;
+
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
   hideExportPanel();
+  toast('เปิดรายงานสำเร็จ','ok');
 }
 
 window.addEventListener('load',()=>{
@@ -1452,7 +1480,6 @@ window.addEventListener('load',()=>{
 });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </body>
 <!-- v3 -->
 </html>
