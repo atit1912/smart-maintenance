@@ -365,18 +365,7 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
             <input type="hidden" id="cl-img">
           </div>
 
-          <div class="fg">
-            <label class="fl">ให้คะแนนการซ่อม</label>
-            <div style="display:flex;gap:8px;justify-content:center;padding:8px 0" id="star-rating">
-              <span onclick="setRating(1)" style="font-size:32px;cursor:pointer" data-star="1">⭐</span>
-              <span onclick="setRating(2)" style="font-size:32px;cursor:pointer" data-star="2">⭐</span>
-              <span onclick="setRating(3)" style="font-size:32px;cursor:pointer" data-star="3">⭐</span>
-              <span onclick="setRating(4)" style="font-size:32px;cursor:pointer" data-star="4">⭐</span>
-              <span onclick="setRating(5)" style="font-size:32px;cursor:pointer" data-star="5">⭐</span>
-            </div>
-            <div id="rating-label" style="text-align:center;font-size:13px;color:var(--muted)">ยังไม่ได้ให้คะแนน</div>
-            <input type="hidden" id="cl-rating" value="0">
-          </div>
+         
 
           <input type="hidden" id="cl-rid">
           <button class="btn btn-green mt12" onclick="submitClose()" id="btn-cl">ปิดงาน</button>
@@ -610,7 +599,27 @@ function fillMaster(){
     fillSel('r-mach','machine_status'); fillSel('r-urg','urgency');
   },50);
 }
+function setDetRating(n) {
+  document.getElementById('det-rating-val').value = n;
+  document.querySelectorAll('#star-rating span').forEach((s, i) => {
+    s.style.opacity = i < n ? '1' : '0.3';
+  });
+  const labels = ['','ปรับปรุงได้','พอใช้','ดี','ดีมาก','ยอดเยี่ยม!'];
+  document.getElementById('det-rating-label').textContent = labels[n] + ' (' + n + '/5)';
+  document.getElementById('det-rating-label').style.color = 'var(--orange)';
+}
 
+async function submitRating() {
+  const score = document.getElementById('det-rating-val').value;
+  const rid   = document.getElementById('det-rating-rid').value;
+  if (!score || score === '0') { toast('กรุณาเลือกคะแนนก่อน', 'er'); return; }
+  ld('กำลังส่งคะแนน...');
+  try {
+    const r = await api({ action: 'rateRequest', request_id: rid, rating_score: score });
+    toast(r.message, r.success ? 'ok' : 'er');
+    if (r.success) openDet(rid);
+  } finally { ul(); }
+}
 async function loadDash(){
   const u=sess.user;
   $('d-name').textContent=u.full_name;
@@ -760,8 +769,25 @@ function renderDet(r){
       ${r.assigned_to?`<div class="dr"><span class="dk">ช่างรับงาน</span><span class="dv">${r.assigned_to} (${fdate(r.accepted_at)})</span></div>`:''}
       ${r.repair_detail?`<div class="dr"><span class="dk">วิธีซ่อม</span><span class="dv">${r.repair_detail}</span></div>`:''}
       ${r.close_image_url?`<div class="dr"><span class="dk">รูปหลังซ่อม</span><span class="dv"><img src="${driveImg(r.close_image_url)}" class="preview-img" onerror="this.style.display='none'"></span></div>`:''}
-    </div></div>
-    ${cost}${act}`;
+    </div></div>const canRate = r.current_status === 'เสร็จสิ้น'
+    && r.created_by === sess.user.username
+    && !r.rating_score;
+  const ratingHtml = canRate ? `
+    <div class="card mt12"><div class="card-p">
+      <div class="sec" style="margin-bottom:10px">⭐ ให้คะแนนการซ่อม</div>
+      <div style="display:flex;gap:8px;justify-content:center;padding:8px 0" id="star-rating">
+        <span onclick="setDetRating(1)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(2)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(3)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(4)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(5)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+      </div>
+      <div id="det-rating-label" style="text-align:center;font-size:13px;color:var(--muted)">ยังไม่ได้ให้คะแนน</div>
+      <input type="hidden" id="det-rating-val" value="0">
+      <input type="hidden" id="det-rating-rid" value="${r.request_id}">
+      <button class="btn btn-orange mt12" onclick="submitRating()">ส่งคะแนน</button>
+    </div></div>` : '';
+    ${cost}${act}${ratingHtml}`;
 }
 
 async function doApprove(id){
@@ -785,9 +811,7 @@ function gotoClose(id){
   $('cl-id').textContent='ปิดงานเลขที่: '+id;
   $('cl-rid').value=id; $('cl-det').value='';
   $('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();
-removeCloseImg(); $('cl-rating').value=0;
-document.querySelectorAll('#star-rating span').forEach(s=>s.style.opacity='0.3');
-$('rating-label').textContent='ยังไม่ได้ให้คะแนน'; $('rating-label').style.color='var(--muted)';
+removeCloseImg();
   go('pg-close');
 }
 function calcCost(){
@@ -801,19 +825,11 @@ async function submitClose(){
   $('btn-cl').disabled=true; ld('กำลังปิดงาน...');
   try{const r=await api({action:'closeRequest',request_id:$('cl-rid').value,repair_detail:det,
     cost_part:$('cl-p').value,cost_labor:$('cl-l').value,cost_other:$('cl-o').value,
-    remark:$('cl-rem').value,close_image_url:$('cl-img').value,rating_score:$('cl-rating').value});
+    remark:$('cl-rem').value,close_image_url:$('cl-img').value,rating_score:''});
     toast(r.message,r.success?'ok':'er'); if(r.success)go('pg-dash');
   }finally{ul();$('btn-cl').disabled=false;}
 }
-function setRating(n){
-  $('cl-rating').value=n;
-  document.querySelectorAll('#star-rating span').forEach((s,i)=>{
-    s.style.opacity=i<n?'1':'0.3';
-  });
-  const labels=['','ปรับปรุงได้','พอใช้','ดี','ดีมาก','ยอดเยี่ยม!'];
-  $('rating-label').textContent=labels[n]+' ('+n+'/5)';
-  $('rating-label').style.color='var(--orange)';
-}
+
 function prevCloseImg(e){
   const file=e.target.files[0]; if(!file)return;
   const reader=new FileReader();
