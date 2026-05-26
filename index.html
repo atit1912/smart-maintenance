@@ -660,7 +660,8 @@ function renderList(cid,data){
         </div>
         ${i<arr.length-1?`<div style="width:14px;height:2px;background:${i<curIdx?colors[arr[i+1]]:'#E0E0E0'};margin-bottom:18px;flex-shrink:0"></div>`:''}
       </div>`).join('');
-   const rating=r.rating_score?`<div style="font-size:11px;color:var(--orange);font-weight:600;margin-top:6px">คะแนนการซ่อม: ${'⭐'.repeat(+r.rating_score)} (${r.rating_score}/5)</div>`:r.current_status==='เสร็จสิ้น'?`<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="background:var(--orange);color:#fff;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">⏳ รอคะแนน</span><span style="font-size:11px;color:var(--muted)">${r.requester_name}</span></div>`:'';
+    const rating=r.rating_score?`<div style="font-size:11px;color:var(--orange);font-weight:600;margin-top:6px">คะแนนการซ่อม: ${'⭐'.repeat(+r.rating_score)} (${r.rating_score}/5)</div>`:r.current_status==='เสร็จสิ้น'?`<div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="background:var(--orange);color:#fff;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">⏳ รอคะแนน</span><span style="font-size:11px;color:var(--muted)">${r.requester_name}</span></div>`:'';
+    return `
     <div class="ri" style="border-left-color:${LCOLOR[r.current_status]||'#BDBDBD'}" onclick="openDet('${r.request_id}')">
       <div class="ri-top"><span class="ri-id">${r.request_id}</span><span class="tag ${TAGS[r.current_status]||'tag-new'}">${r.current_status}</span></div>
       <div class="ri-title">${r.work_category} — ${r.request_type}</div>
