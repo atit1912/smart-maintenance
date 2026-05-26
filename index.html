@@ -633,12 +633,33 @@ function fdatetime(d){if(!d)return'-';const dt=new Date(d);return dt.toLocaleDat
 function renderList(cid,data){
   const el=$(cid);
   if(!data?.length){el.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><p>ไม่มีข้อมูล</p></div>`;return;}
-  el.innerHTML=data.map(r=>`
+  el.innerHTML=data.map(r=>{
+    const statusOrder=['แจ้งซ่อม','อนุมัติ','ช่างรับงาน','กำลังดำเนินการ','เสร็จสิ้น'];
+    const icons=['📋','✅','👷','🔧','🏁'];
+    const colors={'แจ้งซ่อม':'#1976D2','อนุมัติ':'#2E7D32','ช่างรับงาน':'#E65100','กำลังดำเนินการ':'#6A1B9A','เสร็จสิ้น':'#00695C'};
+    const curIdx=statusOrder.indexOf(r.current_status);
+    const flowHtml=statusOrder.map((s,i,arr)=>`
+      <div style="display:flex;align-items:center">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <div style="width:32px;height:32px;border-radius:50%;background:${i<=curIdx?colors[s]:'#E0E0E0'};display:flex;align-items:center;justify-content:center;font-size:14px;${i===curIdx?'box-shadow:0 0 0 3px '+colors[s]+'40':''}">
+            ${icons[i]}
+          </div>
+          <span style="font-size:9px;color:${i<=curIdx?colors[s]:'#9E9E9E'};font-weight:${i===curIdx?'700':'400'};text-align:center;width:44px">${s}</span>
+        </div>
+        ${i<arr.length-1?`<div style="width:14px;height:2px;background:${i<curIdx?colors[arr[i+1]]:'#E0E0E0'};margin-bottom:18px;flex-shrink:0"></div>`:''}
+      </div>`).join('');
+    const rating=r.rating_score?`<div style="font-size:11px;color:var(--orange);font-weight:600;margin-top:6px">คะแนนการซ่อม: ${'⭐'.repeat(+r.rating_score)} (${r.rating_score}/5)</div>`:'';
+    return `
     <div class="ri" style="border-left-color:${LCOLOR[r.current_status]||'#BDBDBD'}" onclick="openDet('${r.request_id}')">
       <div class="ri-top"><span class="ri-id">${r.request_id}</span><span class="tag ${TAGS[r.current_status]||'tag-new'}">${r.current_status}</span></div>
       <div class="ri-title">${r.work_category} — ${r.request_type}</div>
       <div class="ri-meta"><span>${r.department}</span><span>${fdate(r.created_at)}</span><span class="${UCLS[r.urgency]||''}">${r.urgency}</span></div>
-    </div>`).join('');
+      <div style="display:flex;align-items:center;justify-content:center;margin-top:10px;overflow-x:auto;padding:4px 0">
+        ${flowHtml}
+      </div>
+      ${rating}
+    </div>`;
+  }).join('');
 }
 
 async function loadAll(){ld();try{const r=await api({action:'getAllRequests'});if(r.success){allData=r.data;renderFilteredAll();}}catch(e){toast('โหลดล้มเหลว','er');}finally{ul();}}
