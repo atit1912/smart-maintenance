@@ -738,7 +738,7 @@ async function doStart(id){
 function gotoClose(id){
   $('cl-id').textContent='ปิดงานเลขที่: '+id;
   $('cl-rid').value=id; $('cl-det').value='';
-  $('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();$('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();
+  $('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();
 removeCloseImg(); $('cl-rating').value=0;
 document.querySelectorAll('#star-rating span').forEach(s=>s.style.opacity='0.3');
 $('rating-label').textContent='ยังไม่ได้ให้คะแนน'; $('rating-label').style.color='var(--muted)';
@@ -749,14 +749,57 @@ function calcCost(){
   $('cp').textContent=p.toFixed(2); $('cl').textContent=l.toFixed(2);
   $('co').textContent=o.toFixed(2); $('ct').textContent=(p+l+o).toFixed(2)+' บาท';
 }
-try{const r=await api({action:'closeRequest',request_id:$('cl-rid').value,repair_detail:det,
-    cost_part:$('cl-p').value,cost_labor:$('cl-l').value,cost_other:$('cl-o').value,
-    remark:$('cl-rem').value,close_image_url:$('cl-img').value,rating_score:$('cl-rating').value});
+async function submitClose(){
+  const det=$('cl-det').value.trim(); if(!det){toast('กรุณากรอกรายละเอียด','er');return;}
+  if($('cl-img-up').style.display!=='none'){toast('รอรูปภาพอัปโหลดเสร็จก่อน','er');return;}
   $('btn-cl').disabled=true; ld('กำลังปิดงาน...');
   try{const r=await api({action:'closeRequest',request_id:$('cl-rid').value,repair_detail:det,
-    cost_part:$('cl-p').value,cost_labor:$('cl-l').value,cost_other:$('cl-o').value,remark:$('cl-rem').value});
+    cost_part:$('cl-p').value,cost_labor:$('cl-l').value,cost_other:$('cl-o').value,
+    remark:$('cl-rem').value,close_image_url:$('cl-img').value,rating_score:$('cl-rating').value});
     toast(r.message,r.success?'ok':'er'); if(r.success)go('pg-dash');
   }finally{ul();$('btn-cl').disabled=false;}
+}
+function setRating(n){
+  $('cl-rating').value=n;
+  document.querySelectorAll('#star-rating span').forEach((s,i)=>{
+    s.style.opacity=i<n?'1':'0.3';
+  });
+  const labels=['','ปรับปรุงได้','พอใช้','ดี','ดีมาก','ยอดเยี่ยม!'];
+  $('rating-label').textContent=labels[n]+' ('+n+'/5)';
+  $('rating-label').style.color='var(--orange)';
+}
+function prevCloseImg(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const img=new Image();
+    img.onload=function(){
+      const MAX=1200; let w=img.width,h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const resized=canvas.toDataURL('image/jpeg',0.8);
+      $('cl-img-prev').src=resized;
+      $('cl-img-preview-wrap').style.display='block';
+      $('cl-img-box').style.display='none';
+      uploadCloseImg(resized,'image/jpeg',file.name||('close_'+Date.now()+'.jpg'));
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function removeCloseImg(){
+  $('cl-img-prev').src=''; $('cl-img-preview-wrap').style.display='none';
+  $('cl-img-box').style.display='block'; $('cl-img-in').value=''; $('cl-img').value='';
+}
+async function uploadCloseImg(data,mime,name){
+  $('cl-img-up').style.display='block';
+  try{
+    const r=await api({action:'uploadImage',image_data:data.split(',')[1],mime_type:mime,file_name:name});
+    if(r.success){$('cl-img').value=r.url;toast('อัปโหลดรูปสำเร็จ','ok');}
+    else{toast('อัปโหลดล้มเหลว','er');removeCloseImg();}
+  }catch(e){toast('อัปโหลดล้มเหลว','er');removeCloseImg();}
+  finally{$('cl-img-up').style.display='none';}
 }
 
 function initNewForm(){
