@@ -287,6 +287,16 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
   <div class="page" id="pg-all">
     <div class="bar"><button class="bar-back" onclick="back()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><span class="bar-title">งานทั้งหมด</span><button class="bar-btn" onclick="loadAll()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
     <div class="body">
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <select id="all-y" class="fc" style="width:100px" onchange="loadAll()"></select>
+        <select id="all-m" class="fc" style="flex:1" onchange="loadAll()">
+          <option value="">ทุกเดือน</option>
+          <option value="1">มกราคม</option><option value="2">กุมภาพันธ์</option><option value="3">มีนาคม</option>
+          <option value="4">เมษายน</option><option value="5">พฤษภาคม</option><option value="6">มิถุนายน</option>
+          <option value="7">กรกฎาคม</option><option value="8">สิงหาคม</option><option value="9">กันยายน</option>
+          <option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option>
+        </select>
+      </div>
       <div class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="sch-all" placeholder="ค้นหาเลขงาน หรือปัญหา..." oninput="filterAll()"></div>
       <div class="tabs" id="tabs-all">
         <button class="tab on" onclick="setTab('all',this,'tabs-all')">ทั้งหมด</button>
@@ -294,6 +304,7 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
         <button class="tab" onclick="setTab('อนุมัติ',this,'tabs-all')">อนุมัติ</button>
         <button class="tab" onclick="setTab('เสร็จสิ้น',this,'tabs-all')">เสร็จสิ้น</button>
       </div>
+      <div id="all-info" style="font-size:12px;color:var(--muted);margin-bottom:8px;text-align:right"></div>
       <div id="ls-all"></div>
     </div>
   </div>
@@ -505,7 +516,7 @@ function go(id,navEl){
   const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set'];
   $('bnav').style.display=noNav.includes(id)?'none':'flex';
   if(id==='pg-dash') loadDash();
-  if(id==='pg-all') loadAll();
+  if(id==='pg-all'){initAllYear();loadAll();}
   if(id==='pg-mine') loadMine();
   if(id==='pg-apv') loadApv();
   if(id==='pg-acc') loadAcc();
@@ -674,7 +685,20 @@ function renderList(cid,data){
   }).join('');
 }
 
-async function loadAll(){ld();try{const r=await api({action:'getAllRequests'});if(r.success){allData=r.data;renderFilteredAll();}}catch(e){toast('โหลดล้มเหลว','er');}finally{ul();}}
+async function loadAll(){
+  ld();
+  try{
+    const y=$('all-y')?.value||'';
+    const m=$('all-m')?.value||'';
+    const r=await api({action:'getAllRequests',year:y?parseInt(y):null,month:m?parseInt(m):null});
+    if(r.success){
+      allData=r.data;
+      const yTh=(r.filtered_year||new Date().getFullYear())+543;
+      $('all-info').textContent='แสดง '+r.data.length+' งาน (ปี '+yTh+')';
+      renderFilteredAll();
+    }
+  }catch(e){toast('โหลดล้มเหลว','er');}finally{ul();}
+}
 async function loadMine(){ld();try{const r=await api({action:'getMyRequests'});if(r.success)renderList('ls-mine',r.data);}catch(e){}finally{ul();}}
 async function loadApv(){ld();try{const r=await api({action:'getPendingApproval'});if(r.success)renderList('ls-apv',r.data);else toast(r.message,'er');}catch(e){}finally{ul();}}
 async function loadAcc(){ld();try{const r=await api({action:'getPendingAccept'});if(r.success)renderList('ls-acc',r.data);}catch(e){}finally{ul();}}
@@ -950,6 +974,11 @@ async function submitReq(){
   finally{ul();$('btn-sr').disabled=false;}
 }
 
+function initAllYear(){
+  const y=$('all-y'); if(y.options.length>0) return;
+  const cur=new Date().getFullYear();
+  for(let i=cur;i>=cur-3;i--) y.innerHTML+=`<option value="${i}" ${i===cur?'selected':''}>${i+543}</option>`;
+}
 function initRpt(){
   const y=$('rpt-y'); if(!y.options.length){
     const cur=new Date().getFullYear();
