@@ -848,25 +848,55 @@ async function loadRpt(){
       const deptKeys=Object.keys(byDept);
       if(deptKeys.length>0){
         const maxVal=Math.max(...deptKeys.map(k=>byDept[k].total));
-        const bars=deptKeys.map(k=>{
+        const total=deptKeys.reduce((a,k)=>a+byDept[k].total,0);
+        const colors=['#1976D2','#E65100','#2E7D32','#6A1B9A','#00695C','#C62828','#F9A825','#0288D1'];
+
+        // แท่งแนวตั้ง
+        const barW=Math.min(60,Math.floor(300/deptKeys.length));
+        const barItems=deptKeys.map((k,i)=>{
           const pct=maxVal>0?Math.round(byDept[k].total/maxVal*100):0;
-          return `<div style="margin-bottom:10px">
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
-              <span style="color:#424242;font-weight:500">${k}</span>
-              <span style="color:var(--orange);font-weight:600">${byDept[k].total.toLocaleString()} ฿</span>
+          return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:4px">
+            <div style="font-size:11px;font-weight:600;color:${colors[i%colors.length]}">${byDept[k].total.toLocaleString()}</div>
+            <div style="width:100%;max-width:50px;height:120px;display:flex;align-items:flex-end">
+              <div style="width:100%;background:${colors[i%colors.length]};height:${pct}%;border-radius:6px 6px 0 0;transition:height .4s;min-height:4px"></div>
             </div>
-            <div style="background:#F5F5F5;border-radius:20px;height:10px;overflow:hidden">
-              <div style="background:var(--orange);width:${pct}%;height:100%;border-radius:20px;transition:width .4s"></div>
-            </div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">${byDept[k].count} งาน</div>
+            <div style="font-size:10px;color:#424242;text-align:center;word-break:break-all">${k}</div>
           </div>`;
         }).join('');
+
+        // Pie chart (SVG)
+        let slices='', startAngle=0, legend='';
+        deptKeys.forEach((k,i)=>{
+          const pct=total>0?byDept[k].total/total:0;
+          const angle=pct*360;
+          const endAngle=startAngle+angle;
+          const r=80, cx=100, cy=100;
+          const x1=cx+r*Math.sin(startAngle*Math.PI/180);
+          const y1=cy-r*Math.cos(startAngle*Math.PI/180);
+          const x2=cx+r*Math.sin(endAngle*Math.PI/180);
+          const y2=cy-r*Math.cos(endAngle*Math.PI/180);
+          const large=angle>180?1:0;
+          slices+=`<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z" fill="${colors[i%colors.length]}" stroke="#fff" stroke-width="2"/>`;
+          legend+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+            <div style="width:12px;height:12px;border-radius:3px;background:${colors[i%colors.length]};flex-shrink:0"></div>
+            <span style="font-size:12px;color:#424242">${k} <b>${Math.round(pct*100)}%</b></span>
+          </div>`;
+          startAngle=endAngle;
+        });
+
         $('rpt-sum').innerHTML+=`
           <div class="card" style="grid-column:1/-1"><div class="card-p">
             <div class="sec" style="margin-bottom:12px">ค่าใช้จ่ายตามหน่วยงาน</div>
-            ${bars}
+            <div style="display:flex;align-items:flex-end;gap:8px;padding:8px 0;border-bottom:1px solid #F5F5F5;margin-bottom:16px">
+              ${barItems}
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;margin-top:8px">
+              <svg viewBox="0 0 200 200" style="width:140px;height:140px;flex-shrink:0">${slices}</svg>
+              <div>${legend}</div>
+            </div>
           </div></div>`;
       }
+      renderList('rpt-ls',d);
       renderList('rpt-ls',d);
     }
   }catch(e){}finally{ul();}
