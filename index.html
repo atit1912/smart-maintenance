@@ -484,8 +484,8 @@ function go(id,navEl){
   if(id==='pg-dash') hist=[];
   else if(hist[hist.length-1]!==id) hist.push(id);
   if(navEl){document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('on'));navEl.classList.add('on');}
-  const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set','pg-apv','pg-acc','pg-wip','pg-rpt','pg-usr','pg-mine','pg-all'];
-  $('bnav').style.display = noNav.includes(id)?'none':'flex';
+  const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set'];
+$('bnav').style.display = noNav.includes(id)?'none':'flex';
   if(id==='pg-dash') loadDash();
   if(id==='pg-all') loadAll();
   if(id==='pg-mine') loadMine();
@@ -503,8 +503,8 @@ function back(){
   if(prev==='pg-dash') hist=[];
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   $(prev).classList.add('on');
-  const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set','pg-apv','pg-acc','pg-wip','pg-rpt','pg-usr','pg-mine','pg-all'];
-  $('bnav').style.display = noNav.includes(prev)?'none':'flex';
+  const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set'];
+$('bnav').style.display = noNav.includes(prev)?'none':'flex';
   if(prev==='pg-dash') loadDash();
 }
 function goFilter(s){allTab=s;go('pg-all');}
