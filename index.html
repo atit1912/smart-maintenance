@@ -345,30 +345,26 @@ select.fc{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='
         <div class="crow tot"><span>รวม</span><span id="ct" style="color:var(--blue)">0.00 บาท</span></div>
       </div></div>
       <div class="fg mt8"><label class="fl">หมายเหตุ</label><textarea id="cl-rem" class="fc" rows="2" placeholder="หมายเหตุ (ถ้ามี)"></textarea></div>
-          
-          <div class="fg">
-            <label class="fl">รูปภาพหลังซ่อม</label>
-            <div class="img-area" id="cl-img-box" onclick="document.getElementById('cl-img-in').click()">
-              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <p>แตะเพื่อเลือกรูป</p>
-              <small>JPG, PNG (ระบบ resize อัตโนมัติ)</small>
-            </div>
-            <input type="file" id="cl-img-in" accept="image/*" style="display:none" onchange="prevCloseImg(event)">
-            <div id="cl-img-preview-wrap" style="display:none;position:relative;margin-top:8px">
-              <img id="cl-img-prev" class="preview-img">
-              <button onclick="removeCloseImg()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;width:32px;height:32px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
-            </div>
-            <div id="cl-img-up" style="display:none;text-align:center;padding:10px;font-size:13px;color:var(--muted)">
-              <div style="width:20px;height:20px;border:2px solid #E0E0E0;border-top-color:var(--blue);border-radius:50%;animation:sp .65s linear infinite;margin:0 auto 6px"></div>
-              กำลังอัปโหลด...
-            </div>
-            <input type="hidden" id="cl-img">
-          </div>
-
-         
-
-          <input type="hidden" id="cl-rid">
-          <button class="btn btn-green mt12" onclick="submitClose()" id="btn-cl">ปิดงาน</button>
+      <div class="fg">
+        <label class="fl">รูปภาพหลังซ่อม</label>
+        <div class="img-area" id="cl-img-box" onclick="document.getElementById('cl-img-in').click()">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>แตะเพื่อเลือกรูป</p>
+          <small>JPG, PNG (ระบบ resize อัตโนมัติ)</small>
+        </div>
+        <input type="file" id="cl-img-in" accept="image/*" style="display:none" onchange="prevCloseImg(event)">
+        <div id="cl-img-preview-wrap" style="display:none;position:relative;margin-top:8px">
+          <img id="cl-img-prev" class="preview-img">
+          <button onclick="removeCloseImg()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;width:32px;height:32px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+        </div>
+        <div id="cl-img-up" style="display:none;text-align:center;padding:10px;font-size:13px;color:var(--muted)">
+          <div style="width:20px;height:20px;border:2px solid #E0E0E0;border-top-color:var(--blue);border-radius:50%;animation:sp .65s linear infinite;margin:0 auto 6px"></div>
+          กำลังอัปโหลด...
+        </div>
+        <input type="hidden" id="cl-img">
+      </div>
+      <input type="hidden" id="cl-rid">
+      <button class="btn btn-green mt12" onclick="submitClose()" id="btn-cl">ปิดงาน</button>
     </div>
   </div>
 
@@ -507,7 +503,7 @@ function go(id,navEl){
   else if(hist[hist.length-1]!==id) hist.push(id);
   if(navEl){document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('on'));navEl.classList.add('on');}
   const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set'];
-$('bnav').style.display = noNav.includes(id)?'none':'flex';
+  $('bnav').style.display=noNav.includes(id)?'none':'flex';
   if(id==='pg-dash') loadDash();
   if(id==='pg-all') loadAll();
   if(id==='pg-mine') loadMine();
@@ -526,7 +522,7 @@ function back(){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   $(prev).classList.add('on');
   const noNav=['pg-new','pg-det','pg-close','pg-uf','pg-set'];
-$('bnav').style.display = noNav.includes(prev)?'none':'flex';
+  $('bnav').style.display=noNav.includes(prev)?'none':'flex';
   if(prev==='pg-dash') loadDash();
 }
 function goFilter(s){allTab=s;go('pg-all');}
@@ -535,6 +531,7 @@ function togglePw(){
   const i=$('lp');
   i.type=i.type==='password'?'text':'password';
 }
+
 async function doLogin(){
   const u=$('lu').value.trim(),p=$('lp').value;
   $('lerr').style.display='none';
@@ -599,27 +596,29 @@ function fillMaster(){
     fillSel('r-mach','machine_status'); fillSel('r-urg','urgency');
   },50);
 }
-function setDetRating(n) {
-  document.getElementById('det-rating-val').value = n;
-  document.querySelectorAll('#star-rating span').forEach((s, i) => {
-    s.style.opacity = i < n ? '1' : '0.3';
+
+// ── Rating (ในหน้า detail) ─────────────────────────────────
+function setDetRating(n){
+  document.getElementById('det-rating-val').value=n;
+  document.querySelectorAll('#star-rating span').forEach((s,i)=>{
+    s.style.opacity=i<n?'1':'0.3';
   });
-  const labels = ['','ปรับปรุงได้','พอใช้','ดี','ดีมาก','ยอดเยี่ยม!'];
-  document.getElementById('det-rating-label').textContent = labels[n] + ' (' + n + '/5)';
-  document.getElementById('det-rating-label').style.color = 'var(--orange)';
+  const labels=['','ปรับปรุงได้','พอใช้','ดี','ดีมาก','ยอดเยี่ยม!'];
+  document.getElementById('det-rating-label').textContent=labels[n]+' ('+n+'/5)';
+  document.getElementById('det-rating-label').style.color='var(--orange)';
+}
+async function submitRating(){
+  const score=document.getElementById('det-rating-val').value;
+  const rid=document.getElementById('det-rating-rid').value;
+  if(!score||score==='0'){toast('กรุณาเลือกคะแนนก่อน','er');return;}
+  ld('กำลังส่งคะแนน...');
+  try{
+    const r=await api({action:'rateRequest',request_id:rid,rating_score:score});
+    toast(r.message,r.success?'ok':'er');
+    if(r.success) openDet(rid);
+  }finally{ul();}
 }
 
-async function submitRating() {
-  const score = document.getElementById('det-rating-val').value;
-  const rid   = document.getElementById('det-rating-rid').value;
-  if (!score || score === '0') { toast('กรุณาเลือกคะแนนก่อน', 'er'); return; }
-  ld('กำลังส่งคะแนน...');
-  try {
-    const r = await api({ action: 'rateRequest', request_id: rid, rating_score: score });
-    toast(r.message, r.success ? 'ok' : 'er');
-    if (r.success) openDet(rid);
-  } finally { ul(); }
-}
 async function loadDash(){
   const u=sess.user;
   $('d-name').textContent=u.full_name;
@@ -698,6 +697,7 @@ async function openDet(id){
     renderDet(r.data); go('pg-det');
   }catch(e){toast('โหลดล้มเหลว','er');}finally{ul();}
 }
+
 function renderDet(r){
   $('det-title').textContent=r.request_id;
   const apv=hasRole('Approver')||hasRole('Admin');
@@ -724,22 +724,37 @@ function renderDet(r){
       <div class="crow tot"><span>รวม</span><span style="color:var(--blue)">${(+r.total_cost||0).toLocaleString()} บาท</span></div>
     </div></div>`:'';
 
- $('det-body').innerHTML=`
+  // Rating card — แสดงเฉพาะผู้แจ้ง + งานเสร็จ + ยังไม่ได้ให้คะแนน
+  const canRate=r.current_status==='เสร็จสิ้น' && r.created_by===sess.user.username && !r.rating_score;
+  const ratingHtml=canRate?`
+    <div class="card mt12"><div class="card-p">
+      <div class="sec" style="margin-bottom:10px">⭐ ให้คะแนนการซ่อม</div>
+      <div style="display:flex;gap:8px;justify-content:center;padding:8px 0" id="star-rating">
+        <span onclick="setDetRating(1)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(2)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(3)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(4)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+        <span onclick="setDetRating(5)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
+      </div>
+      <div id="det-rating-label" style="text-align:center;font-size:13px;color:var(--muted)">ยังไม่ได้ให้คะแนน</div>
+      <input type="hidden" id="det-rating-val" value="0">
+      <input type="hidden" id="det-rating-rid" value="${r.request_id}">
+      <button class="btn btn-orange mt12" onclick="submitRating()">ส่งคะแนน</button>
+    </div></div>`:'';
+
+  $('det-body').innerHTML=`
     <div class="card"><div class="card-p">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
         <span class="tag ${TAGS[r.current_status]||'tag-new'}" style="font-size:14px;padding:5px 14px">${r.current_status}</span>
         <span class="${UCLS[r.urgency]||''}" style="font-size:13px">${r.urgency}</span>
       </div>
-
-      <!-- Flow Work -->
       <div style="display:flex;align-items:center;justify-content:center;margin-bottom:16px;overflow-x:auto;padding:8px 0">
         ${['แจ้งซ่อม','อนุมัติ','ช่างรับงาน','กำลังดำเนินการ','เสร็จสิ้น'].map((s,i,arr)=>{
           const icons=['📋','✅','👷','🔧','🏁'];
           const colors={'แจ้งซ่อม':'#1976D2','อนุมัติ':'#2E7D32','ช่างรับงาน':'#E65100','กำลังดำเนินการ':'#6A1B9A','เสร็จสิ้น':'#00695C'};
           const statusOrder=['แจ้งซ่อม','อนุมัติ','ช่างรับงาน','กำลังดำเนินการ','เสร็จสิ้น'];
           const curIdx=statusOrder.indexOf(r.current_status);
-          const isDone=i<=curIdx;
-          const isCur=i===curIdx;
+          const isDone=i<=curIdx; const isCur=i===curIdx;
           return `<div style="display:flex;align-items:center">
             <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
               <div style="width:40px;height:40px;border-radius:50%;background:${isDone?colors[s]:'#E0E0E0'};display:flex;align-items:center;justify-content:center;font-size:18px;${isCur?'box-shadow:0 0 0 3px '+colors[s]+'40':''}">
@@ -751,9 +766,7 @@ function renderDet(r){
           </div>`;
         }).join('')}
       </div>
-
       ${r.rating_score?`<div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--orange);font-weight:600">คะแนนการซ่อม: ${'⭐'.repeat(+r.rating_score)} (${r.rating_score}/5)</div>`:''}
-
       ${img}
       <div class="dr"><span class="dk">ผู้แจ้ง</span><span class="dv">${r.requester_name}</span></div>
       <div class="dr"><span class="dk">หน่วยงาน</span><span class="dv">${r.department}</span></div>
@@ -768,25 +781,9 @@ function renderDet(r){
       ${r.rejected_by?`<div class="dr"><span class="dk">ไม่อนุมัติโดย</span><span class="dv" style="color:var(--red)">${r.rejected_by}<br>${r.remark||''}</span></div>`:''}
       ${r.assigned_to?`<div class="dr"><span class="dk">ช่างรับงาน</span><span class="dv">${r.assigned_to} (${fdate(r.accepted_at)})</span></div>`:''}
       ${r.repair_detail?`<div class="dr"><span class="dk">วิธีซ่อม</span><span class="dv">${r.repair_detail}</span></div>`:''}
+      ${r.closed_by?`<div class="dr"><span class="dk">ปิดงานโดย</span><span class="dv">${r.closed_by}</span></div>`:''}
       ${r.close_image_url?`<div class="dr"><span class="dk">รูปหลังซ่อม</span><span class="dv"><img src="${driveImg(r.close_image_url)}" class="preview-img" onerror="this.style.display='none'"></span></div>`:''}
-    </div></div>const canRate = r.current_status === 'เสร็จสิ้น'
-    && r.created_by === sess.user.username
-    && !r.rating_score;
-  const ratingHtml = canRate ? `
-    <div class="card mt12"><div class="card-p">
-      <div class="sec" style="margin-bottom:10px">⭐ ให้คะแนนการซ่อม</div>
-      <div style="display:flex;gap:8px;justify-content:center;padding:8px 0" id="star-rating">
-        <span onclick="setDetRating(1)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
-        <span onclick="setDetRating(2)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
-        <span onclick="setDetRating(3)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
-        <span onclick="setDetRating(4)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
-        <span onclick="setDetRating(5)" style="font-size:32px;cursor:pointer;opacity:0.3">⭐</span>
-      </div>
-      <div id="det-rating-label" style="text-align:center;font-size:13px;color:var(--muted)">ยังไม่ได้ให้คะแนน</div>
-      <input type="hidden" id="det-rating-val" value="0">
-      <input type="hidden" id="det-rating-rid" value="${r.request_id}">
-      <button class="btn btn-orange mt12" onclick="submitRating()">ส่งคะแนน</button>
-    </div></div>` : '';
+    </div></div>
     ${cost}${act}${ratingHtml}`;
 }
 
@@ -811,7 +808,7 @@ function gotoClose(id){
   $('cl-id').textContent='ปิดงานเลขที่: '+id;
   $('cl-rid').value=id; $('cl-det').value='';
   $('cl-p').value=0; $('cl-l').value=0; $('cl-o').value=0; calcCost();
-removeCloseImg();
+  removeCloseImg();
   go('pg-close');
 }
 function calcCost(){
@@ -885,20 +882,14 @@ function initNewForm(){
 }
 
 function prevImg(e){
-  const file=e.target.files[0];
-  if(!file) return;
+  const file=e.target.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=function(ev){
     const img=new Image();
     img.onload=function(){
-      const MAX=1200;
-      let w=img.width, h=img.height;
-      if(w>MAX||h>MAX){
-        if(w>h){h=Math.round(h*MAX/w);w=MAX;}
-        else{w=Math.round(w*MAX/h);h=MAX;}
-      }
-      const canvas=document.createElement('canvas');
-      canvas.width=w; canvas.height=h;
+      const MAX=1200; let w=img.width, h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
       const resized=canvas.toDataURL('image/jpeg',0.8);
       document.getElementById('img-prev').src=resized;
@@ -976,7 +967,6 @@ async function loadRpt(){
         <div class="scard s1" style="cursor:default"><div class="snum">${done}</div><div class="slbl">เสร็จสิ้น</div></div>
         <div class="scard s3" style="cursor:default"><div class="snum">${pend}</div><div class="slbl">ค้างอยู่</div></div>
         <div class="scard" style="cursor:default"><div class="snum" style="font-size:20px;color:var(--orange)">${cost.toLocaleString()}</div><div class="slbl">ค่าใช้จ่าย (฿)</div></div>`;
-
       const byDept=(()=>{
         if(s?.by_department && Object.keys(s.by_department).length>0) return s.by_department;
         const bd={};
@@ -992,9 +982,6 @@ async function loadRpt(){
         const maxVal=Math.max(...deptKeys.map(k=>byDept[k].total));
         const total=deptKeys.reduce((a,k)=>a+byDept[k].total,0);
         const colors=['#1976D2','#E65100','#2E7D32','#6A1B9A','#00695C','#C62828','#F9A825','#0288D1'];
-
-        // แท่งแนวตั้ง
-        const barW=Math.min(60,Math.floor(300/deptKeys.length));
         const barItems=deptKeys.map((k,i)=>{
           const pct=maxVal>0?Math.round(byDept[k].total/maxVal*100):0;
           return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:4px">
@@ -1005,40 +992,33 @@ async function loadRpt(){
             <div style="font-size:10px;color:#424242;text-align:center;word-break:break-all">${k}</div>
           </div>`;
         }).join('');
-
-        // Pie chart (SVG)
         let slices='', startAngle=0, legend='';
         deptKeys.forEach((k,i)=>{
           const pct=total>0?byDept[k].total/total:0;
-          const angle=pct*360;
-          const endAngle=startAngle+angle;
-          const r=80, cx=100, cy=100;
-          const x1=cx+r*Math.sin(startAngle*Math.PI/180);
-          const y1=cy-r*Math.cos(startAngle*Math.PI/180);
-          const x2=cx+r*Math.sin(endAngle*Math.PI/180);
-          const y2=cy-r*Math.cos(endAngle*Math.PI/180);
+          const angle=pct*360; const endAngle=startAngle+angle;
+          const rv=80, cx=100, cy=100;
+          const x1=cx+rv*Math.sin(startAngle*Math.PI/180);
+          const y1=cy-rv*Math.cos(startAngle*Math.PI/180);
+          const x2=cx+rv*Math.sin(endAngle*Math.PI/180);
+          const y2=cy-rv*Math.cos(endAngle*Math.PI/180);
           const large=angle>180?1:0;
-          slices+=`<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z" fill="${colors[i%colors.length]}" stroke="#fff" stroke-width="2"/>`;
+          slices+=`<path d="M${cx},${cy} L${x1},${y1} A${rv},${rv} 0 ${large},1 ${x2},${y2} Z" fill="${colors[i%colors.length]}" stroke="#fff" stroke-width="2"/>`;
           legend+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
             <div style="width:12px;height:12px;border-radius:3px;background:${colors[i%colors.length]};flex-shrink:0"></div>
             <span style="font-size:12px;color:#424242">${k} <b>${Math.round(pct*100)}%</b></span>
           </div>`;
           startAngle=endAngle;
         });
-
         $('rpt-sum').innerHTML+=`
           <div class="card" style="grid-column:1/-1"><div class="card-p">
             <div class="sec" style="margin-bottom:12px">ค่าใช้จ่ายตามหน่วยงาน</div>
-            <div style="display:flex;align-items:flex-end;gap:8px;padding:8px 0;border-bottom:1px solid #F5F5F5;margin-bottom:16px">
-              ${barItems}
-            </div>
+            <div style="display:flex;align-items:flex-end;gap:8px;padding:8px 0;border-bottom:1px solid #F5F5F5;margin-bottom:16px">${barItems}</div>
             <div style="display:flex;align-items:center;gap:16px;margin-top:8px">
               <svg viewBox="0 0 200 200" style="width:140px;height:140px;flex-shrink:0">${slices}</svg>
               <div>${legend}</div>
             </div>
           </div></div>`;
       }
-      renderList('rpt-ls',d);
       renderList('rpt-ls',d);
     }
   }catch(e){}finally{ul();}
@@ -1101,5 +1081,5 @@ window.addEventListener('load',()=>{
 });
 </script>
 </body>
-<!-- v2 -->
+<!-- v3 -->
 </html>
